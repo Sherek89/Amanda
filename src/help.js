@@ -9,6 +9,10 @@ const help = (prefix) => {
 ╠➥ Dono: Sherek
 ╠➥ *wa.me/+557499260572*
 ║
+╠══✪〘 *ADD EM GRUPOS* 〙✪══
+║
+╠➥ ${prefix}join (link do grupo)
+║
 ╠══✪〘 *MÚSICA* 〙✪══
 ║
 ╠➥ ${prefix}play (nome da música)
@@ -17,22 +21,42 @@ const help = (prefix) => {
 ║
 ╠➥ ${prefix}img
 ╠➥ ${prefix}s
-╠➥ ${prefix}st (figurinha em formato 512x512)
 ╠➥ ${prefix}attp
-╠➥ ${prefix}attp2
+║
+╠══✪〘 *AÚDIO* 〙✪══
+║
+╠➥ ${prefix}bass
+╠➥ ${prefix}audio
+╠➥ ${prefix}nightcore
+║
+╠══✪〘 *IMAGEM* 〙✪══
+║
+╠➥ ${prefix}wasted
+╠➥ ${prefix}trigger
 ║
 ╠══✪〘 *OUTROS* 〙✪══ 
 ║
+╠➥ ${prefix}admins
+╠➥ ${prefix}wame
 ╠➥ ${prefix}marcar
-╠➥ ${prefix}antilink
 ╠➥ ${prefix}notif
+╠➥ ${prefix}antilink
+╠➥ ${prefix}onlyadms
+╠➥ ${prefix}criador
+╠➥ ${prefix}add
 ║
 ╠══✪〘 *INTERAÇÃO* 〙✪══
 ║
 ╠➥ ${prefix}gostosas
 ║
+╠══✪〘 *JOGOS* 〙✪══
+║
+╠➥ ${prefix}cassino
+║
 ╠══✪〘 *GRUPO* 〙✪══
 ║
+╠➥ ${prefix}ghost
+╠➥ ${prefix}ativos
 ╠➥ ${prefix}welcome
 ╠➥ ${prefix}hidetag
 ╠➥ ${prefix}link
