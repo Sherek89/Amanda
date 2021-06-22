@@ -1,40 +1,48 @@
 const help = (prefix) => {
 	return `
-「 AmandaBot 」
-
-◪ *Olá ${pushname} Bem-vindo(a)*
-
-◪ *SOBRE*
-  ❏ Prefixo: 「  ${prefix}  」
-  ❏ Versão do Canibal : free
-  ❏ wa.me/+557499260572
-◪ *MÚSICA*
-  │
-  └─ ❏ ${prefix}play (nome da música)
-◪ *STICKER*
-  │
-  ├─ ❏ ${prefix}img
-  ├─ ❏ ${prefix}s2
-  └─ ❏ ${prefix}s
-◪ *OUTROS*
-  │
-  └─ ❏ ${prefix}clearall
-◪ *ADMS*
-  │
-  ├─ ❏ ${prefix}welcome
-  ├─ ❏ ${prefix}link
-  ├─ ❏ ${prefix}del
-  ├─ ❏ ${prefix}demitir
-  ├─ ❏ ${prefix}sair
-  ├─ ❏ ${prefix}abrir
-  ├─ ❏ ${prefix}fechar
-  ├─ ❏ ${prefix}kick
-  ├─ ❏ ${prefix}promover
-  ├─ ❏ ${prefix}membros
-  └─ ❏ ${prefix}notif
-◪ *CRÉDITOS*
-  │
-  ❏ Criador : Sherek
+╔══✪〘 INFO 〙✪══
+║
+╠➥ ${pushname} 
+╠
+╠➥ *AMANDA BOT*
+╠➥ Versão 1.0.0
+╠➥ Dono: Sherek
+╠➥ *wa.me/+557499260572*
+║
+╠══✪〘 *MÚSICA* 〙✪══
+║
+╠➥ ${prefix}play (nome da música)
+║
+╠══✪〘 *STICKER* 〙✪══
+║
+╠➥ ${prefix}img
+╠➥ ${prefix}s
+╠➥ ${prefix}st (figurinha em formato 512x512)
+╠➥ ${prefix}attp
+╠➥ ${prefix}attp2
+║
+╠══✪〘 *OUTROS* 〙✪══ 
+║
+╠➥ ${prefix}marcar
+╠➥ ${prefix}antilink
+╠➥ ${prefix}notif
+║
+╠══✪〘 *INTERAÇÃO* 〙✪══
+║
+╠➥ ${prefix}gostosas
+║
+╠══✪〘 *GRUPO* 〙✪══
+║
+╠➥ ${prefix}welcome
+╠➥ ${prefix}hidetag
+╠➥ ${prefix}link
+╠➥ ${prefix}rebaixar
+╠➥ ${prefix}sair
+╠➥ ${prefix}abrir
+╠➥ ${prefix}fechar
+╠➥ ${prefix}ban
+╠➥ ${prefix}promover
+╠➥ ${prefix}membros
 `
 }
 
