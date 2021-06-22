@@ -192,10 +192,6 @@ async function starts() {
 					bytes.unshift(0x01)	
 				} else {	
 					bytes.unshift(0x00)	
-				}
-			if (messagesC.includes("maconha")){
-			client.updatePresence(from, Presence.composing)
-			reply("Também gosto")
 	}
 				if (len < 16) {	
 					last = len.toString(16)	
@@ -395,78 +391,7 @@ fs.unlinkSync(rano)
 } else {
 reply(`Você precisa enviar ou marcar uma imagem ou vídeo com no máximo 5 segundos`)
 }
-break	
-case 'st':
-	if ((isMedia && !mek.message.videoMessage || isQuotedImage) && args.length == 0) {
-		const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
-		const media = await tiringa.downloadAndSaveMediaMessage(encmedia)                                     
-		rano = getRandom('.webp')
-		await ffmpeg(`./${media}`)
-			.input(media)
-			.on('start', function (cmd) {
-				console.log(`Started : ${cmd}`)
-			})
-			.on('error', function (err) {
-				console.log(`Error : ${err}`)
-				exec(`webpmux -set exif ${addMetadata('AmandaBot', authorname)} ${rano} -o ${rano}`, async (error) => {
-				fs.unlinkSync(media)
-				reply(mess.error.stick)
-			})
-	  })
-			exec(`ffmpeg -i ${media} -vcodec libwebp -filter:v fps=fps=15 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 800:800 ${rano}`, (err) => {
-			fs.unlinkSync(media)
-		buffer = fs.readFileSync(rano)
-		tiringa.sendMessage(from, buffer, sticker, {quoted: mek})
-
-		fs.unlinkSync(rano)
-		})
-		} else if ((isMedia && mek.message.videoMessage.seconds < 11 || isQuotedVideo && mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds < 11) && args.length == 0) {
-		const encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
-		const media = await tiringa.downloadAndSaveMediaMessage(encmedia)
-		rano = getRandom('.webp')
-		reply(mess.waitgif)
-		await ffmpeg(`./${media}`)
-			.inputFormat(media.split('.')[1])
-			.on('start', function (cmd) {
-				console.log(`Started : ${cmd}`)
-			})
-			.on('error', function (err) {
-				console.log(`Error : ${err}`)
-				exec(`webpmux -set exif ${addMetadata('AmandaBot', authorname)} ${rano} -o ${rano}`, async (error) => {
-				fs.unlinkSync(media)
-				tipe = media.endsWith('.mp4') ? 'video' : 'gif'
-				reply(`Falha na conversão de ${tipe} para sticker`)
-			})
-	  })
-			exec(`ffmpeg -i ${media} -vcodec libwebp -filter:v fps=fps=15 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 200:200 ${rano}`, (err) => {
-			fs.unlinkSync(media)
-		buffer = fs.readFileSync(rano)
-		tiringa.sendMessage(from, buffer, sticker, {quoted: mek})
-
-		fs.unlinkSync(rano)
-		})
-		} else {
-		reply(`Você precisa enviar ou marcar uma imagem ou vídeo com no máximo 5 segundos`)
-	}
-	break	
-case 'antilink' :
-if (messagesC.includes("://chat.whatsapp.com/")){
-					if (!isGroup) return
-					if (!isAntiLink) return
-					if (isGroupAdmins) return reply(`*Você é admin, nao irei te banir, fica suave.*`)
-					client.updatePresence(from, Presence.composing)
-					var Kick = `${sender.split("@")[0]}@s.whatsapp.net`
-					setTimeout( () => {
-					reply('tchau👋')
-					}, 1100)
-					setTimeout( () => {
-					client.groupRemove(from, [Kick]).catch((e) => {reply(`*ERROR:* ${e}`)}) 
-								}, 1000)
-					setTimeout( () => {
-					reply(`link detectado você vai ser expulso`)
-					}, 0)
-				}
-					break			
+break		
 case 'setprefix':
 if (args.length < 1) return
 if (!isOwner) return reply(mess.only.ownerB)
@@ -475,6 +400,35 @@ setting.prefix = prefix
 fs.writeFileSync('./src/settings.json', JSON.stringify(setting, null, '\t'))
 reply(`Prefixo mudado para : ${prefix}`)
 break
+case 'onlyadms':
+			if (!isGroupMsg) return await kill.reply(from, mess.sogrupo(), id)
+            if (!isGroupAdmins) return await kill.reply(from, mess.soademiro(), id)
+            if (!isBotGroupAdmins) return await kill.reply(from, mess.botademira(), id)
+			if (args.length !== 1) return await kill.reply(from, mess.onoff(), id)
+            if (args[0] == 'on') {
+				await kill.setGroupToAdminsOnly(groupId, true).then(async () => { await kill.sendText(from, mess.admson()) })
+			} else if (args[0] == 'off') {
+				await kill.setGroupToAdminsOnly(groupId, false).then(async () => { await kill.sendText(from, mess.admsoff()) })
+			} else return await kill.reply(from, mess.kldica1(), id)
+			break
+case 'antilink':
+			if (isGroupMsg && isGroupAdmins || isGroupMsg && isOwner) {
+				if (args.length !== 1) return await kill.reply(from, mess.onoff(), id)
+				if (args[0] == 'on') {
+					if (atlinks.includes(groupId)) return await kill.reply(from, mess.jaenabled(), id)
+					atlinks.push(groupId)
+					await fs.writeFileSync('./lib/config/Grupos/antilinks.json', JSON.stringify(atlinks))
+					await kill.reply(from, mess.enabled(), id)
+				} else if (args[0] == 'off') {
+					if (!atlinks.includes(groupId)) return await kill.reply(from, mess.jadisabled(), id)
+					atlinks.splice(groupId, 1)
+					await fs.writeFileSync('./lib/config/Grupos/antilinks.json', JSON.stringify(atlinks))
+					await kill.reply(from, mess.disabled(), id)
+				} else return await kill.reply(from, mess.kldica1(), id)
+			} else if (isGroupMsg) {
+				await kill.reply(from, mess.soademiro(), id)
+			} else return await kill.reply(from, mess.sogrupo(), id)
+            break
 case 'membros':
 if (!isGroup) return reply(mess.only.group)
 if (!isGroupAdmins) return reply(mess.only.admin)
@@ -486,33 +440,7 @@ teks += `*->* @${mem.jid.split('@')[0]}\n`
 members_id.push(mem.jid)
 }
 mentions(teks, members_id, true)
-break
-case 'attp':
-			    	if (args.length < 1) return reply(mess.blank)
-					teks = body.slice(7)
-					if (teks.length > 15) return reply('O texto é longo, até 15 caracteres')
-					reply('*Estou fazendo, se der erro tente novamente!*')
-					cry = getRandom('.gif')
-					rano = getRandom('.webp')
-					anu = await fetchJson(`https://api.xteam.xyz/attp?file&text=${teks}`, {method: 'get'})
-                   if (!isGroup) return reply(mess.only.group)
-					reply (mess.wait)
-					exec(`wget ${anu.result} -O ${cry} && ffmpeg -i ${cry} -vcodec libwebp -filter:v fps=fps=15 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 512:512 ${rano}`, (err) => {
-						fs.unlinkSync(cry)
-						buffer = fs.readFileSync(rano)
-						client.sendMessage(from, buffer, sticker, {quoted: mek})
-						fs.unlinkSync(rano)
-					})
-					await limitAdd(sender) 
-					break 		
-					case 'attp2':
-					if (args.length < 1) return reply(mess.blank)
-					teks = body.slice(7)
-					if (teks.length > 15) return reply('O texto é longo, até 15 caracteres')
-					reply('*Estou fazendo, se der erro tente novamente!*')
-					buffer = await getBuffer(`https://api.xteam.xyz/attp?file&text=${teks}`)
-					client.sendMessage(from, buffer, video, {quoted: mek, caption: '*Feita*'})
-					break			
+break		
 case 'bc':
 if (!isOwner) return reply('Você não é o meu dono')
 if (args.length < 1) return reply('.......')
@@ -613,17 +541,102 @@ contextInfo: { mentionedJid: [sender] }
 thoth.groupSettingChange(from, GroupSettingChange.messageSend, false)
 thoth.sendMessage(from, open, text, { quoted: mek })
 break
-case 'play':   
-reply(mess.wait)
-play = body.slice(5)
-anu = await fetchJson(`https://api.zeks.xyz/api/ytplaymp3?q=${play}&apikey=apivinz`)
-if (anu.error) return reply(anu.error)
-infomp3 = `*Caso não seja a musica que deseja, tente novamente*\n\n*Musica encontrada!!!*\nTitulo : ${anu.result.title}\nFonte : ${anu.result.source}\nTamanho : ${anu.result.size}\n\n*ESPERE ENVIANDO POR FAVOR, AGUARDE\n\n *AmandaBot*`
-buffer = await getBuffer(anu.result.thumbnail)
-lagu = await getBuffer(anu.result.url_audio)
-thoth.sendMessage(from, buffer, image, {quoted: mek, caption: infomp3})
-thoth.sendMessage(from, lagu, audio, {mimetype: 'audio/mp4', filename: `${anu.title}.mp3`, quoted: mek})
-break
+case 'add':
+            if (!isGroupMsg) return await kill.reply(from, mess.sogrupo(), id)
+            if (!isGroupAdmins) return await kill.reply(from, mess.soademiro(), id)
+            if (!isBotGroupAdmins) return await kill.reply(from, mess.botademira(), id)
+	        if (args.length !== 1 && isNaN(args[0])) return await kill.reply(from, mess.usenumber(), id)
+			if (groupMembersId.includes(args[0] + '@c.us')) return await kill.reply(from, mess.janogp(), id)
+            try {
+                await kill.addParticipant(from,`${args[0]}@c.us`)
+            } catch (error) { 
+				await kill.reply(from, mess.addpessoa(), id)
+				console.log(color('[ADICIONAR]', 'crimson'), color(`→ Obtive erros no comando ${prefix}${command} → ${error.message} - Você pode ignorar.`, 'gold'))
+			}
+            break
+			case 'attp':
+			if (args.length == 0) return await kill.reply(from, mess.noargs() + 'palavras/números.', id)
+			await kill.reply(from, mess.wait(), id)
+			await axios.get(`https://api.xteam.xyz/attp?file&text=${encodeURIComponent(body.slice(6))}`, { responseType: 'arraybuffer' }).then(async (response) => {
+				const attp = Buffer.from(response.data, 'binary').toString('base64')
+				await kill.sendImageAsSticker(from, attp, { author: config.author, pack: config.pack, keepScale: true })
+			})
+			break
+			case 'wasted':
+            if (isMedia && type === 'image' || isQuotedImage) {
+                await kill.reply(from, mess.wait(), id)
+                const wastedmd = isQuotedImage ? quotedMsg : message
+                const wstddt = await decryptMedia(wastedmd, uaOverride)
+				const wastedUpl = await upload(wstddt, false)
+                await kill.sendFileFromUrl(from, `https://some-random-api.ml/canvas/wasted?avatar=${wastedUpl}`, 'Wasted.jpg', mess.wasted(), id).catch(async () => { await kill.reply(from, mess.upfail(), id) })
+            } else return await kill.reply(from, mess.onlyimg(), id)
+            break
+        case 'trigger':
+            if (isMedia && type === 'image' || isQuotedImage) {
+                await kill.reply(from, mess.wait(), id)
+                const triggermd = isQuotedImage ? quotedMsg : message
+                const upTrigger = await decryptMedia(triggermd, uaOverride)
+				const getTrigger = await upload(upTrigger, false)
+				await axios.get(`https://some-random-api.ml/canvas/triggered?avatar=${getTrigger}`, { responseType: 'arraybuffer' }).then(async (response) => {
+					const theTigger = Buffer.from(response.data, 'binary').toString('base64')
+					await kill.sendImageAsSticker(from, theTigger, { author: config.author, pack: config.pack, keepScale: true })
+				}).catch(async () => { await kill.reply(from, mess.upfail(), id) })
+            } else return await kill.reply(from, mess.onlyimg(), id)
+            break
+case 'wame':;case 'wa.me':
+			if (quotedMsg) {
+				await kill.reply(from, `📞 - https://wa.me/${quotedMsgObj.sender.id.replace('@c.us', '')} - ${quotedMsgObj.sender.id.replace('@c.us', '')}`, id)
+			} else if (mentionedJidList.length !== 0) {
+				var wame = ''
+				for (let i = 0; i < mentionedJidList.length; i++) { wame += `\n📞 - https://wa.me/${mentionedJidList[i].replace('@c.us', '')} - @${mentionedJidList[i].replace('@c.us', '')}` }
+				await kill.sendTextWithMentions(from, wame, id)
+			} else return await kill.reply(from, `📞 - https://wa.me/${user.replace('@c.us', '')} - ${user.replace('@c.us', '')}`, id)
+			break
+case 'cassino':
+			var checkxpc = await getXp(user, nivel)
+			const xpMenor = parseInt(checkxpc / 2, 10)
+			if (isNaN(args[0]) || !isInt(args[0]) || Number(args[0]) >= xpMenor || Number(args[0]) < 250) return await kill.reply(from, mess.gaming(checkxpc, xpMenor), id)
+			var ncasxp = Math.floor(Math.random() * -milSort) - Number(args[0])
+			var pcasxp = Math.floor(Math.random() * milSort) + Number(args[0])
+            const limitcs = await getLimit(user, daily)
+            if (limitcs !== undefined && cd - (Date.now() - limitcs) > 0) {
+				const time = ms(cd - (Date.now() - limitcs))
+                await kill.reply(from, mess.limitgame(), id)
+			} else {
+				var cassin = ['🍒', '🎃', '🍐']
+				const cassin1 = cassin[Math.floor(Math.random() * cassin.length)]
+				const cassin2 = cassin[Math.floor(Math.random() * cassin.length)]
+				const cassin3 = cassin[Math.floor(Math.random() * cassin.length)]
+				var cassinend = cassin1 + cassin2 + cassin3
+				if (cassinend == '🍒🍒🍒' || cassinend == '🎃🎃🎃' || cassinend == '🍐🍐🍐') {
+					await kill.reply(from, mess.caswin(cassin1, cassin2, cassin3, pcasxp), id)
+					await sleep(2000)
+					await addXp(user, Number(pcasxp), nivel)
+				} else {
+					await kill.reply(from, mess.caslose(cassin1, cassin2, cassin3, ncasxp), id)
+					await sleep(2000)
+					await addXp(user, Number(ncasxp), nivel)
+				}
+				await addLimit(user, daily) 
+			}
+			break
+case 'criador':
+			await kill.reply(from, `☀️ - Host: https://wa.me/${config.owner[0].replace('@c.us', '')}\nSherek: https://wa.me/557499260572`, id)
+			await kill.reply(from, mess.everhost(), id)
+            break
+case 'play':
+            if (args.length == 0) return await kill.reply(from, mess.noargs() + 'Títulos do YouTube/YouTube Titles.', id)
+			try {
+				await kill.reply(from, mess.wait(), id)
+				const ytres = await ytsearch(`${body.slice(6)}`)
+				await kill.sendYoutubeLink(from, `${ytres.all[0].url}`, '\n' + mess.play(ytres))
+				await youtubedl(`https://youtu.be/${ytres.all[0].videoId}`, { noWarnings: true, noCallHome: true, noCheckCertificate: true, preferFreeFormats: true, youtubeSkipDashManifest: true, referer: `https://youtu.be/${ytres.all[0].videoId}`, x: true, audioFormat: 'mp3', o: `./lib/media/audio/${user.replace('@c.us', '')}${lvpc}.mp3` }).then(async () => { await kill.sendPtt(from, `./lib/media/audio/${user.replace('@c.us', '')}${lvpc}.mp3`, id) })
+				await sleep(10000).then(async () => { await fs.unlinkSync(`./lib/media/audio/${user.replace('@c.us', '')}${lvpc}.mp3`) })
+			} catch (error) {
+				await kill.reply(from, mess.verybig(), id)
+				console.log(color('[PLAY]', 'crimson'), color(`→ Obtive erros no comando ${prefix}${command} → ${error.message} - Você pode ignorar.`, 'AmantaBot'))
+			}
+            break
 case 'rebaixar':
 if (!isGroup) return reply(mess.only.group)
 if (!isGroupAdmins) return reply(mess.only.admin)
@@ -642,7 +655,71 @@ mentions(`@${mentioned[0].split('@')[0]} membro rebaixado`, mentioned, true)
 thoth.groupDemoteAdmin(from, mentioned)
 }
 break
-case 'ban':
+case 'ghost':
+            if (!isGroupMsg) return await kill.reply(from. mess.sogrupo(), id)
+			if (!isGroupAdmins) return await kill.reply(from, mess.soademiro(), id)
+			if (!isBotGroupAdmins) return await kill.reply(from, mess.botademira(), id)
+			if (isNaN(args[0])) return await kill.reply(from, mess.kickcount(), id)
+			await kill.reply(from, mess.wait(), id)
+			var userRem = `Removidos ↓\n\n`
+            try {
+				welkom.splice(groupId, 1)
+				await fs.writeFileSync('./lib/config/Grupos/welcome.json', JSON.stringify(welkom))
+                for (let i = 0; i < groupMembers.length; i++) {
+					const msgCount = await getMsg(groupMembers[i].id, msgcount)
+					if (groupAdmins.includes(groupMembers[i].id) || botNumber.includes(groupMembers[i].id) || ownerNumber.includes(groupMembers[i].id)) {
+						console.log(color(' ', 'crimson'), groupMembers[i].id)
+					} else {
+						if (msgCount < Number(args[0])) {
+							await kill.removeParticipant(groupId, groupMembers[i].id)
+							userRem += `@${groupMembers[i].id}\n\n`
+						}
+					}
+				}
+                await kill.sendTextWithMentions(from, userRem.replace('@c.us', ''))
+				welkom.push(groupId)
+				await fs.writeFileSync('./lib/config/Grupos/welcome.json', JSON.stringify(welkom))
+            } catch (err) { await kill.reply(from, mess.fail() + '\nMaybe mistake/Talvez engano/0 removidos/0 removed.', id) }
+            break
+			
+			
+		case 'ativos':
+            if (!isGroupMsg) return await kill.reply(from, mess.sogrupo(), id)
+			msgcount.sort((a, b) => (a.msg < b.msg) ? 1 : -1)
+            let active = '-----[ *RANKING DOS ATIVOS* ]----\n\n'
+            try {
+                for (let i = 0; i < 10; i++) {
+					const aRandVar = await kill.getContact(msgcount[i].id)
+					var getPushname = aRandVar.pushname
+					if (getPushname == null) getPushname = 'wa.me/' + msgcount[i].id.replace('@c.us', '')
+					active += `${i + 1} → *${getPushname}*\n➸ *Mensagens*: ${msgcount[i].msg}\n\n`
+				}
+                await kill.sendText(from, active)
+            } catch (error) { 
+				await kill.reply(from, mess.tenpeo(), id)
+				console.log(color('[ATIVOS]', 'crimson'), color(`→ Obtive erros no comando ${prefix}${command} → ${error.message} - Você pode ignorar.`, 'AmandaBot'))
+			}
+            break
+case 'admins':
+			if (!isGroupMsg) return await kill.reply(from, mess.sogrupo(), id)
+            if (!isGroupAdmins && !isOwner) return await kill.reply(from, mess.soademiro(), id)
+            await kill.sendText(from, mess.admins())
+            break
+case 'join':
+            if (args.length == 0) return await kill.reply(from, mess.nolink(), id)
+            const gplk = body.slice(6)
+            const tGr = await kill.getAllGroups()
+            const isLink = gplk.match(/(https:\/\/chat.whatsapp.com)/gi)
+            const check = await kill.inviteInfo(gplk)
+			const memberlmt = check.size
+            if (!isLink) return await kill.reply(from, mess.nolink(), id)
+            if (tGr.length > config.gpLimit) return await kill.reply(from, mess.cheio(tGr), id)
+            if (memberlmt < config.memberReq) return await kill.reply(from, mess.noreq(memberlmt), id)
+            if (check.status == 200) {
+                await kill.joinGroupViaLink(gplk).then(async () => { await kill.reply(from, mess.maked()) })
+            } else return await kill.reply(from, mess.fail(), id)
+            break
+case 'ban':;case 'banir':
 					if (!isOwner) return reply(mess.only.ownerB)
 					client.banUser (`${body.slice(7)}@c.us`, "add")
 					client.sendMessage(from, `Tchau ${body.slice(7)}@c.us`, text)
@@ -655,18 +732,89 @@ if (!isBotGroupAdmins) return reply(mess.only.Badmin)
 linkgc = await thoth.groupInviteCode(from)
 reply('https://chat.whatsapp.com/'+linkgc)
 break
-					case 'marcar':
-						if (!isGroup) return reply(mess.only.group)
-						if (!isGroupAdmins) return reply(mess.only.admin)
-						members_id = []
-						teks = (args.length > 1) ? body.slice(8).trim() : ''
-						teks += '\n\n'
-						for (let mem of groupMembers) {
-							teks += ` @${mem.jid.split('@')[0]}\n`
-							members_id.push(mem.jid)
-						}
-						mentions(teks, members_id, true)
-						break
+case 'sound':;case 'bass':
+			if (isMedia && isAudio || isQuotedAudio || isPtt || isQuotedPtt) {
+				if (args.length == 1 && !isNaN(args[0])) {
+					try {
+						await kill.reply(from, mess.wait(), id)
+						const encryptMedia = isQuotedAudio || isQuotedPtt ? quotedMsg : message
+						const mediaData = await decryptMedia(encryptMedia, uaOverride)
+						await fs.writeFile(`./lib/media/audio/${user.replace('@c.us', '')}${lvpc}.mp3`, mediaData, (err) => {
+							if (err) return console.error(err)
+							console.log(color('[FFMPEG]', 'crimson'), color(`- Conversão de audio "Bass" pedida por → ${pushname} - Você pode ignorar.`, 'gold'))
+							ffmpeg(`./lib/media/audio/${user.replace('@c.us', '')}${lvpc}.mp3`).audioFilter(`equalizer=f=40:width_type=h:width=50:g=${args[0]}`).format('mp3').save(`./lib/media/audio/audio-${user.replace('@c.us', '')}${lvpc}.mp3`) // Você pode editar o equalizador ali
+							.on('error', async function (error, stdout, stderr) {
+								await kill.reply(from, mess.fail(), id)
+								console.log(color('[BASS]', 'crimson'), color(`→ Obtive erros no comando ${prefix}${command} → ${error.message} - Você pode ignorar.`, 'gold'))
+							})
+							.on('end', async () => {
+								console.log(color('[FFMPEG]', 'crimson'), color(`- Conversão de audio "Bass" finalizada, enviando para → ${pushname} - Você pode ignorar...`, 'gold'))
+								await kill.sendFile(from, `./lib/media/audio/audio-${user.replace('@c.us', '')}${lvpc}.mp3`, 'audio.mp3', '', id)
+								await sleep(10000).then(async () => { await fs.unlinkSync(`./lib/media/audio/audio-${user.replace('@c.us', '')}${lvpc}.mp3`);await fs.unlinkSync(`./lib/media/audio/${user.replace('@c.us', '')}${lvpc}.mp3`) })
+							})
+						})
+					} catch (error) {
+						await kill.reply(from, mess.fail(), id)
+						console.log(color('[BASS]', 'crimson'), color(`→ Obtive erros no comando ${prefix}${command} → ${error.message} - Você pode ignorar.`, 'gold'))
+					}
+				} else return await kill.reply(from, mess.noargs() + 'quantidade de bass | bass quantity.', id)
+			} else return await kill.reply(from, mess.onlyaudio(), id)
+			break
+		case 'nightcore':
+			if (isMedia && isAudio || isQuotedAudio || isPtt || isQuotedPtt) {
+				try {
+					await kill.reply(from, mess.wait(), id)
+					const encryptMedia = isQuotedAudio || isQuotedPtt ? quotedMsg : message
+					const mediaData = await decryptMedia(encryptMedia, uaOverride)
+					await fs.writeFile(`./lib/media/audio/n${user.replace('@c.us', '')}${lvpc}.mp3`, mediaData, (err) => {
+						if (err) return console.error(err)
+						console.log(color('[FFMPEG]', 'crimson'), color(`- Conversão de audio para versão "nightcore" pedida por → ${pushname} - Você pode ignorar.`, 'gold'))
+						ffmpeg(`./lib/media/audio/n${user.replace('@c.us', '')}${lvpc}.mp3`).audioFilter('asetrate=44100*1.25').format('mp3').save(`./lib/media/audio/night-${user.replace('@c.us', '')}${lvpc}.mp3`) // Você pode editar o valor acima (44100*1.25)
+						.on('error', async function (error, stdout, stderr) {
+							await kill.reply(from, mess.fail(), id)
+							console.log(color('[NIGHTCORE]', 'crimson'), color(`→ Obtive erros no comando ${prefix}${command} → ${error.message} - Você pode ignorar.`, 'gold'))
+						})
+						.on('end', async () => {
+							console.log(color('[FFMPEG]', 'crimson'), color(`- Conversão de audio para versão "nightcore" finalizada, enviando para → ${pushname} - Você pode ignorar...`, 'gold'))
+							await kill.sendFile(from, `./lib/media/audio/night-${user.replace('@c.us', '')}${lvpc}.mp3`, 'audio.mp3', '', id)
+							await sleep(10000).then(async () => { await fs.unlinkSync(`./lib/media/audio/night-${user.replace('@c.us', '')}${lvpc}.mp3`);await fs.unlinkSync(`./lib/media/audio/n${user.replace('@c.us', '')}${lvpc}.mp3`) })
+						})
+					})
+				} catch (error) {
+					await kill.reply(from, mess.fail(), id)
+					console.log(color('[NIGHTCORE]', 'crimson'), color(`→ Obtive erros no comando ${prefix}${command} → ${error.message} - Você pode ignorar.`, 'gold'))
+				}
+			} else return await kill.reply(from, mess.onlyaudio(), id)
+			break
+		case 'audio':
+			if (isMedia && isVideo || isQuotedVideo) {
+				try {
+					await kill.reply(from, mess.wait(), id)
+					const vTypeA = isQuotedVideo ? quotedMsg : message
+					const mediaData = await decryptMedia(vTypeA, uaOverride)
+					await fs.writeFile(`./lib/media/video/${user.replace('@c.us', '')}${lvpc}.${vTypeA.mimetype.replace(/.+\//, '')}`, mediaData, (err) => {
+						if (err) return console.error(err)
+						console.log(color('[FFMPEG]', 'crimson'), color(`- Conversão de video para audio pedida por → ${pushname} - Você pode ignorar.`, 'gold'))
+						ffmpeg(`./lib/media/video/${user.replace('@c.us', '')}${lvpc}.${vTypeA.mimetype.replace(/.+\//, '')}`).format('mp3').save(`./lib/media/video/v${user.replace('@c.us', '')}${lvpc}.mp3`)
+						.on('error', async function (error, stdout, stderr) {
+							await kill.reply(from, mess.fail(), id)
+							console.log(color('[AUDIO]', 'crimson'), color(`→ Obtive erros no comando ${prefix}${command} → ${error.message} - Você pode ignorar.`, 'gold'))
+						})
+						.on('end', async () => {
+							console.log(color('[FFMPEG]', 'crimson'), color(`- Conversão de video para audio terminada, enviando para → ${pushname} - Você pode ignorar...`, 'gold'))
+							await kill.sendFile(from, `./lib/media/video/v${user.replace('@c.us', '')}${lvpc}.mp3`, 'audio.mp3', '', id)
+							await sleep(10000).then(async () => { await fs.unlinkSync(`./lib/media/video/v${user.replace('@c.us', '')}${lvpc}.mp3`);await fs.unlinkSync(`./lib/media/video/${user.replace('@c.us', '')}${lvpc}.${vTypeA.mimetype.replace(/.+\//, '')}`) })
+						})
+					})
+				} catch (error) {
+					await kill.reply(from, mess.fail(), id)
+					console.log(color('[AUDIO]', 'crimson'), color(`→ Obtive erros no comando ${prefix}${command} → ${error.message} - Você pode ignorar.`, 'gold'))
+				}
+			} else return await kill.reply(from, mess.onlyvideo(), id)
+			break
+case 'marcar':
+			await kill.sendTextWithMentions(from, `@${user.replace('@c.us', '')}`)
+			break
 						case 'hidetag':
 					if (!isGroup) return reply(mess.only.group)
 					if (!isGroupAdmins) return reply(mess.only.group)
