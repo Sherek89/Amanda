@@ -1,5 +1,3 @@
-//se for usar dê os créditos. Esse bot é uma base simples em pt-br, mas tbm pode ser usada como bot pois está 100% funcional
-
 const {
     WAConnection,
     MessageType,
@@ -24,7 +22,7 @@ const double = Math.floor(Math.random() * 2) + 1
 const welkom = JSON.parse(fs.readFileSync('./src/welkom.json'))
 const samih = JSON.parse(fs.readFileSync('./src/simi.json'))
 const setting = JSON.parse(fs.readFileSync('./src/settings.json'))
-prefix = setting.prefix
+prefix = '/'
 blocked = []
 ban = []
 
@@ -69,7 +67,7 @@ async function starts() {
 				} catch {
 					ppimg = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
 				}
-				teks = `Olá @${num.split('@')[0]}\nBem-vindo ao grupo: *${mdata.subject}*`
+				teks = `Bem vindo(a) @${num.split('@')[0]}\n *${mdata.subject}*`
 				let buff = await getBuffer(ppimg)
 				thoth.sendMessage(mdata.id, buff, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
 			} else if (anu.action == 'remove') {
@@ -79,7 +77,7 @@ async function starts() {
 				} catch {
 					ppimg = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
 				}
-				teks = `R.I.P @${num.split('@')[0]}👋`
+				teks = `Espero que você volte algum dia @${num.split('@')[0]}`
 				let buff = await getBuffer(ppimg)
 				thoth.sendMessage(mdata.id, buff, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
 			}
@@ -123,19 +121,19 @@ async function starts() {
 				success: '✔️ Sucesso ✔️',
 				error: {
 					stick: '❌ Ocorreu um erro ao converter a imagem em sticker ❌',
-					Iv: '❌ Link inválido ❌'
+					Iv: ' Link inválido '
 				},
 				only: {
-					group: '-> Este comando só pode ser usado em grupos! ',
-					ownerG: '-> Este comando só pode ser usado pelo dono do grupo! ',
-					ownerB: '-> Este comando só pode ser usado pelo meu dono! ',
-					admin: '-> Você não é adm!  ',
-					Badmin: '-> Preciso ser adm! <- '
+					group: ' Este comando só pode ser usado em grupos! ',
+					ownerG: ' Este comando só pode ser usado pelo dono do grupo! ',
+					ownerB: ' Este comando só pode ser usado pelo meu dono! ',
+					admin: ' Você não é adm! ',
+					Badmin: ' Preciso ser adm! '
 				}
 			}
 
 			const botNumber = thoth.user.jid
-			const ownerNumber = [`${setting.ownerNumber}@s.whatsapp.net`]
+			const ownerNumber = ["557499260572@s.whatsapp.net"]
 			const isGroup = from.endsWith('@g.us')
 			const sender = isGroup ? mek.participant : mek.key.remoteJid
 			const groupMetadata = isGroup ? await thoth.groupMetadata(from) : ''
@@ -175,7 +173,7 @@ async function starts() {
 			if (authorname != undefined) { } else { authorname = groupName }	
 			
 			function addMetadata(packname, author) {	
-				if (!packname) packname = 'AmandaBot'; if (!author) author = '557499260572';	
+				if (!packname) packname = '557499260572t'; if (!author) author = 'AmandaBot';	
 				author = author.replace(/[^a-zA-Z0-9]/g, '');	
 				let name = `${author}_${packname}`
 				if (fs.existsSync(`./src/stickers/${name}.exif`)) return `./src/stickers/${name}.exif`
@@ -194,8 +192,11 @@ async function starts() {
 					bytes.unshift(0x01)	
 				} else {	
 					bytes.unshift(0x00)	
-				}	
-
+				}
+			if (messagesC.includes("maconha")){
+			client.updatePresence(from, Presence.composing)
+			reply("Também gosto")
+	}
 				if (len < 16) {	
 					last = len.toString(16)	
 					last = "0" + len	
@@ -212,7 +213,7 @@ async function starts() {
 				fs.writeFile(`./src/stickers/${name}.exif`, buffer, (err) => {	
 					return `./src/stickers/${name}.exif`	
 				})	
-
+					
 			}
 			switch(command) {
 		                 case 'lista':
@@ -248,7 +249,7 @@ async function starts() {
 							})
 							.on('end', function () {
 								console.log('Finish')
-								exec(`webpmux -set exif ${addMetadata('CanibalBot', authorname)} ${ran} -o ${ran}`, async (error) => {
+								exec(`webpmux -set exif ${addMetadata('AmandaBot', authorname)} ${ran} -o ${ran}`, async (error) => {
 									if (error) return reply(mess.error.stick)
 									thoth.sendMessage(from, fs.readFileSync(ran), sticker, {quoted: mek})
 									fs.unlinkSync(media)	
@@ -275,7 +276,7 @@ async function starts() {
 								console.log(`Error : ${err}`)
 								fs.unlinkSync(media)
 								tipe = media.endsWith('.mp4') ? 'video' : 'gif'
-								reply(`❌ Falha no momento da conversão ${tipe} para sticker❌`)
+								reply(`Falha no momento da conversão ${tipe} para sticker!`)
 							})
 							.on('end', function () {
 								console.log('Finish')
@@ -338,13 +339,13 @@ async function starts() {
 							.toFormat('webp')
 							.save(ran)*/
 					} else {
-						reply(`Coloque na legenda da foto ${prefix}sticker`)
+						reply(`Coloque na legenda da foto ${prefix}s`)
 					}
 					break
-case 'fig2':
-case 'fga2':
-case 's2':					
-case 'sticker2':
+case 'fig':
+case 'f':
+case 'sherek':					
+case 's':
 if ((isMedia && !mek.message.videoMessage || isQuotedImage) && args.length == 0) {
 const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
 const media = await thoth.downloadAndSaveMediaMessage(encmedia)                                     
@@ -392,9 +393,80 @@ thoth.sendMessage(from, buffer, sticker, {quoted: mek})
 fs.unlinkSync(rano)
 })
 } else {
-reply(`Você precisa enviar ou marcar uma imagem ou vídeo com no máximo 3 segundos`)
+reply(`Você precisa enviar ou marcar uma imagem ou vídeo com no máximo 5 segundos`)
 }
-break					
+break	
+case 'st':
+	if ((isMedia && !mek.message.videoMessage || isQuotedImage) && args.length == 0) {
+		const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
+		const media = await tiringa.downloadAndSaveMediaMessage(encmedia)                                     
+		rano = getRandom('.webp')
+		await ffmpeg(`./${media}`)
+			.input(media)
+			.on('start', function (cmd) {
+				console.log(`Started : ${cmd}`)
+			})
+			.on('error', function (err) {
+				console.log(`Error : ${err}`)
+				exec(`webpmux -set exif ${addMetadata('AmandaBot', authorname)} ${rano} -o ${rano}`, async (error) => {
+				fs.unlinkSync(media)
+				reply(mess.error.stick)
+			})
+	  })
+			exec(`ffmpeg -i ${media} -vcodec libwebp -filter:v fps=fps=15 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 800:800 ${rano}`, (err) => {
+			fs.unlinkSync(media)
+		buffer = fs.readFileSync(rano)
+		tiringa.sendMessage(from, buffer, sticker, {quoted: mek})
+
+		fs.unlinkSync(rano)
+		})
+		} else if ((isMedia && mek.message.videoMessage.seconds < 11 || isQuotedVideo && mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds < 11) && args.length == 0) {
+		const encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
+		const media = await tiringa.downloadAndSaveMediaMessage(encmedia)
+		rano = getRandom('.webp')
+		reply(mess.waitgif)
+		await ffmpeg(`./${media}`)
+			.inputFormat(media.split('.')[1])
+			.on('start', function (cmd) {
+				console.log(`Started : ${cmd}`)
+			})
+			.on('error', function (err) {
+				console.log(`Error : ${err}`)
+				exec(`webpmux -set exif ${addMetadata('AmandaBot', authorname)} ${rano} -o ${rano}`, async (error) => {
+				fs.unlinkSync(media)
+				tipe = media.endsWith('.mp4') ? 'video' : 'gif'
+				reply(`Falha na conversão de ${tipe} para sticker`)
+			})
+	  })
+			exec(`ffmpeg -i ${media} -vcodec libwebp -filter:v fps=fps=15 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 200:200 ${rano}`, (err) => {
+			fs.unlinkSync(media)
+		buffer = fs.readFileSync(rano)
+		tiringa.sendMessage(from, buffer, sticker, {quoted: mek})
+
+		fs.unlinkSync(rano)
+		})
+		} else {
+		reply(`Você precisa enviar ou marcar uma imagem ou vídeo com no máximo 5 segundos`)
+	}
+	break	
+case 'antilink' :
+if (messagesC.includes("://chat.whatsapp.com/")){
+					if (!isGroup) return
+					if (!isAntiLink) return
+					if (isGroupAdmins) return reply(`*Você é admin, nao irei te banir, fica suave.*`)
+					client.updatePresence(from, Presence.composing)
+					var Kick = `${sender.split("@")[0]}@s.whatsapp.net`
+					setTimeout( () => {
+					reply('tchau👋')
+					}, 1100)
+					setTimeout( () => {
+					client.groupRemove(from, [Kick]).catch((e) => {reply(`*ERROR:* ${e}`)}) 
+								}, 1000)
+					setTimeout( () => {
+					reply(`link detectado você vai ser expulso`)
+					}, 0)
+				}
+					break			
 case 'setprefix':
 if (args.length < 1) return
 if (!isOwner) return reply(mess.only.ownerB)
@@ -410,40 +482,37 @@ members_id = []
 teks = (args.length > 1) ? body.slice(8).trim() : ''
 teks += '\n\n'
 for (let mem of groupMembers) {
-teks += `*Chamando todos os membros* @${mem.jid.split('@')[0]}\n`
+teks += `*->* @${mem.jid.split('@')[0]}\n`
 members_id.push(mem.jid)
 }
 mentions(teks, members_id, true)
 break
-case 'tagall2':
-members_id = []
-teks = (args.length > 1) ? body.slice(8).trim() : ''
-teks += '\n\n'
-for (let mem of groupMembers) {
-teks += `╠➥ @${mem.jid.split('@')[0]}\n`
-members_id.push(mem.jid)
-}
-reply(teks)
-break
-case 'tagall3':
-members_id = []
-teks = (args.length > 1) ? body.slice(8).trim() : ''
-teks += '\n\n'
-for (let mem of groupMembers) {
-teks += `╠➥ https://wa.me/${mem.jid.split('@')[0]}\n`
-members_id.push(mem.jid)
-}
-thoth.sendMessage(from, teks, text, {detectLinks: false, quoted: mek})
-break
-case 'clearall':
-if (!isOwner) return reply('Você não é o meu dono')
-anu = await thoth.chats.all()
-thoth.setMaxListeners(25)
-for (let _ of anu) {
-thoth.deleteChat(_.jid)
-}
-reply('Chats limpos')
-break
+case 'attp':
+			    	if (args.length < 1) return reply(mess.blank)
+					teks = body.slice(7)
+					if (teks.length > 15) return reply('O texto é longo, até 15 caracteres')
+					reply('*Estou fazendo, se der erro tente novamente!*')
+					cry = getRandom('.gif')
+					rano = getRandom('.webp')
+					anu = await fetchJson(`https://api.xteam.xyz/attp?file&text=${teks}`, {method: 'get'})
+                   if (!isGroup) return reply(mess.only.group)
+					reply (mess.wait)
+					exec(`wget ${anu.result} -O ${cry} && ffmpeg -i ${cry} -vcodec libwebp -filter:v fps=fps=15 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 512:512 ${rano}`, (err) => {
+						fs.unlinkSync(cry)
+						buffer = fs.readFileSync(rano)
+						client.sendMessage(from, buffer, sticker, {quoted: mek})
+						fs.unlinkSync(rano)
+					})
+					await limitAdd(sender) 
+					break 		
+					case 'attp2':
+					if (args.length < 1) return reply(mess.blank)
+					teks = body.slice(7)
+					if (teks.length > 15) return reply('O texto é longo, até 15 caracteres')
+					reply('*Estou fazendo, se der erro tente novamente!*')
+					buffer = await getBuffer(`https://api.xteam.xyz/attp?file&text=${teks}`)
+					client.sendMessage(from, buffer, video, {quoted: mek, caption: '*Feita*'})
+					break			
 case 'bc':
 if (!isOwner) return reply('Você não é o meu dono')
 if (args.length < 1) return reply('.......')
@@ -460,24 +529,6 @@ for (let _ of anu) {
 sendMess(_.jid, `[ATENÇÃO]\n\n${body.slice(4)}`)
 }
 reply('Feito')
-}
-break
-case 'promover':
-if (!isGroup) return reply(mess.only.group)
-if (!isGroupAdmins) return reply(mess.only.admin)
-if (!isBotGroupAdmins) return reply(mess.only.Badmin)
-if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return
-mentioned = mek.message.extendedTextMessage.contextInfo.mentionedJid
-if (mentioned.length > 1) {
-teks = 'Membro promovido\n'
-for (let _ of mentioned) {
-teks += `@${_.split('@')[0]}\n`
-}
-mentions(from, mentioned, true)
-thoth.groupRemove(from, mentioned)
-} else {
-mentions(`Sucesso: @${mentioned[0].split('@')[0]} Promovido para adm!`, mentioned, true)
-thoth.groupMakeAdmin(from, mentioned)
 }
 break
 case 'notif':
@@ -497,7 +548,46 @@ contextInfo: { mentionedJid: jids },
 quoted: mek
 }
 await thoth.sendMessage(from, options, text)
+case 'promover':
+if (!isGroup) return reply(mess.only.group)
+if (!isGroupAdmins) return reply(mess.only.admin)
+if (!isBotGroupAdmins) return reply(mess.only.Badmin)
+if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return
+mentioned = mek.message.extendedTextMessage.contextInfo.mentionedJid
+if (mentioned.length > 1) {
+teks = 'Membro promovido\n'
+for (let _ of mentioned) {
+teks += `@${_.split('@')[0]}\n`
+}
+mentions(from, mentioned, true)
+thoth.groupRemove(from, mentioned)
+} else {
+mentions(`@${mentioned[0].split('@')[0]} virou adm!`, mentioned, true)
+thoth.groupMakeAdmin(from, mentioned)
+}
 break
+case 'gostosas':
+      if (!isGroup) return reply(mess.only.group)
+                        member = []
+                        const p1 = groupMembers
+                        const p2 = groupMembers
+                        const p3 = groupMembers
+                        const p4 = groupMembers
+                        const p5 = groupMembers
+                        const o1 = p1[Math.floor(Math.random() * p1.length)]
+                        const o2 = p2[Math.floor(Math.random() * p2.length)]
+                        const o3 = p3[Math.floor(Math.random() * p3.length)]
+                        const o4 = p4[Math.floor(Math.random() * p4.length)]
+                        const o5 = p5[Math.floor(Math.random() * p5.length)]
+                        teks = `
+                  Paradas!\n\n@${o1.jid.split('@')[0]}\n\n\n${o2.jid.split('@')[0]}\n\n\n${o3.jid.split('@')[0]}\n\n\n${o4.jid.split('@')[0]}\n\n\n@${o5.jid.split('@')[0]}\n\n\nMultadas por serem gostosas demais, paguem sua multa enviando nude no PV do meu dono, by AmandaBot`
+                        member.push(o1.jid)
+                        member.push(o2.jid)
+                        member.push(o3.jid)
+                        member.push(o4.jid)
+                        member.push(o5.jid)
+                        mentions(teks, member, true)
+break 
 case 'fechar':
 thoth.updatePresence(from, Presence.composing)
 if (!isGroup) return reply(mess.only.group)
@@ -505,7 +595,7 @@ if (!isGroupAdmins) return reply(mess.only.admin)
 if (!isBotGroupAdmins) return reply(mess.only.Badmin)
 var nomor = mek.participant
 const close = {
-text: `O adm @${nomor.split("@s.whatsapp.net")[0]}\nfechou o grupo`,
+text: `@${nomor.split("@s.whatsapp.net")[0]}\nfechou o grupo`,
 contextInfo: { mentionedJid: [nomor] }
 }
 thoth.groupSettingChange(from, GroupSettingChange.messageSend, true);
@@ -517,7 +607,7 @@ if (!isGroup) return reply(mess.only.group)
 if (!isGroupAdmins) return reply(mess.only.admin)
 if (!isBotGroupAdmins) return reply(mess.only.Badmin)
 open = {
-text: `O adm @${sender.split("@")[0]}\nabriu o grupo`,
+text: `@${sender.split("@")[0]}\nabriu o grupo`,
 contextInfo: { mentionedJid: [sender] }
 }
 thoth.groupSettingChange(from, GroupSettingChange.messageSend, false)
@@ -528,53 +618,35 @@ reply(mess.wait)
 play = body.slice(5)
 anu = await fetchJson(`https://api.zeks.xyz/api/ytplaymp3?q=${play}&apikey=apivinz`)
 if (anu.error) return reply(anu.error)
-infomp3 = `*Caso não seja a musica que deseja, tente novamente*\n\n*Musica encontrada!!!*\nTitulo : ${anu.result.title}\nFonte : ${anu.result.source}\nTamanho : ${anu.result.size}\n\n*ESPERE ENVIANDO POR FAVOR, AGUARDE\n\n *MAY NO TOPO*`
+infomp3 = `*Caso não seja a musica que deseja, tente novamente*\n\n*Musica encontrada!!!*\nTitulo : ${anu.result.title}\nFonte : ${anu.result.source}\nTamanho : ${anu.result.size}\n\n*ESPERE ENVIANDO POR FAVOR, AGUARDE\n\n *AmandaBot*`
 buffer = await getBuffer(anu.result.thumbnail)
 lagu = await getBuffer(anu.result.url_audio)
 thoth.sendMessage(from, buffer, image, {quoted: mek, caption: infomp3})
 thoth.sendMessage(from, lagu, audio, {mimetype: 'audio/mp4', filename: `${anu.title}.mp3`, quoted: mek})
 break
-case 'demitir':
+case 'rebaixar':
 if (!isGroup) return reply(mess.only.group)
 if (!isGroupAdmins) return reply(mess.only.admin)
 if (!isBotGroupAdmins) return reply(mess.only.Badmin)
 if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return
 mentioned = mek.message.extendedTextMessage.contextInfo.mentionedJid
 if (mentioned.length > 1) {
-teks = 'Membro demitido\n'
+teks = 'Tirando o cargo\n'
 for (let _ of mentioned) {
 teks += `@${_.split('@')[0]}\n`
 }
 mentions(teks, mentioned, true)
 thoth.groupRemove(from, mentioned)
 } else {
-mentions(`Sucesso: @${mentioned[0].split('@')[0]} Foi demitido`, mentioned, true)
+mentions(`@${mentioned[0].split('@')[0]} membro rebaixado`, mentioned, true)
 thoth.groupDemoteAdmin(from, mentioned)
 }
 break
-case 'delete':
-case 'del':
-if (!isGroup) return reply(mess.only.group)
-if (!isGroupAdmins) return reply(mess.only.admin)
-thoth.deleteMessage(from, { id: mek.message.extendedTextMessage.contextInfo.stanzaId, remoteJid: from, fromMe: true })
-break
-case 'kick':
-if (!isGroup) return reply(mess.only.group)
-if (!isGroupAdmins) return reply(mess.only.admin)
-if (!isBotGroupAdmins) return reply(mess.only.Badmin)
-if (mek.message.extendedTextMessage === undefined || mek.message.extendedTextMessage === null) return reply('Tag target yang ingin di tendang!')
-mentioned = mek.message.extendedTextMessage.contextInfo.mentionedJid
-if (mentioned.length > 1) {
-teks = 'Removendo:\n'
-for (let _ of mentioned) {
-teks += `@${_.split('@')[0]}\n`
-}
-mentions(teks, mentioned, true)
-thoth.groupRemove(from, mentioned)
-} else {
-mentions(`Você foi expulso: @${mentioned[0].split('@')[0]}`, mentioned, true)
-thoth.groupRemove(from, mentioned)
-}
+case 'ban':
+					if (!isOwner) return reply(mess.only.ownerB)
+					client.banUser (`${body.slice(7)}@c.us`, "add")
+					client.sendMessage(from, `Tchau ${body.slice(7)}@c.us`, text)
+					break
 break
 case 'link':
 if (!isGroup) return reply(mess.only.group)
@@ -583,6 +655,35 @@ if (!isBotGroupAdmins) return reply(mess.only.Badmin)
 linkgc = await thoth.groupInviteCode(from)
 reply('https://chat.whatsapp.com/'+linkgc)
 break
+					case 'marcar':
+						if (!isGroup) return reply(mess.only.group)
+						if (!isGroupAdmins) return reply(mess.only.admin)
+						members_id = []
+						teks = (args.length > 1) ? body.slice(8).trim() : ''
+						teks += '\n\n'
+						for (let mem of groupMembers) {
+							teks += ` @${mem.jid.split('@')[0]}\n`
+							members_id.push(mem.jid)
+						}
+						mentions(teks, members_id, true)
+						break
+						case 'hidetag':
+					if (!isGroup) return reply(mess.only.group)
+					if (!isGroupAdmins) return reply(mess.only.group)
+					var value = body.slice(9)
+					var group = await client.groupMetadata(from)
+					var member = group['participants']
+					var mem = []
+					member.map( async adm => {
+					mem.push(adm.id.replace('c.us', 's.whatsapp.net'))
+					})
+					var options = {
+					text: value,
+					contextInfo: { mentionedJid: mem },
+					quoted: mek
+					}
+					client.sendMessage(from, options, text)
+					break
 case 'sair':
 if (!isGroup) return reply(mess.only.group)
 if (isGroupAdmins || isOwner) {
@@ -593,23 +694,23 @@ reply(mess.only.admin)
 break
 case 'img':
 if (!isGroup) return reply(mess.only.group)
-if (!isQuotedSticker) return reply('❌ marque um sticker ❌')
+if (!isQuotedSticker) return reply(' marque um sticker ')
 reply(mess.wait)
 encmedia = JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo
 media = await thoth.downloadAndSaveMediaMessage(encmedia)
 ran = getRandom('.png')
 exec(`ffmpeg -i ${media} ${ran}`, (err) => {
 fs.unlinkSync(media)
-if (err) return reply('❌ Só sticker sem movimento ❌')
+if (err) return reply(' Só sticker sem movimento ')
 buffer = fs.readFileSync(ran)
-thoth.sendMessage(from, buffer, image, {quoted: mek, caption: 'O Sherek já comeu o seu cuzinho KKKKKKKK'})
+thoth.sendMessage(from, buffer, image, {quoted: mek, caption: 'O Sherek quer foto da sua buceta, mande para ele\nwa.me/557499260572'})
 fs.unlinkSync(ran)
 })
 break
 case 'welcome':
 if (!isGroup) return reply(mess.only.group)
 if (!isGroupAdmins) return reply(mess.only.admin)
-if (args.length < 1) return reply('Hmmmm')
+if (args.length < 1) return reply('para ativar digite, welcome 1, para desativar digite, welcome 0')
 if (Number(args[0]) === 1) {
 if (isWelkom) return reply('Já ativo')
 welkom.push(from)
