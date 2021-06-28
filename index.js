@@ -39,61 +39,61 @@ function kyun(seconds){
 }
 
 async function starts() {
-	const thoth = new WAConnection()
-	thoth.logger.level = 'warn'
+	const sherek = new WAConnection()
+	sherek.logger.level = 'warn'
 	console.log(banner.string)
-	thoth.on('qr', () => {
+	sherek.on('qr', () => {
 		console.log(color('[','white'), color('!','red'), color(']','white'), color(' Scan the qr code above'))
 	})
-	fs.existsSync('./BarBar.json') && thoth.loadAuthInfo('./BarBar.json')
-	thoth.on('connecting', () => {
+	fs.existsSync('./BarBar.json') && sherek.loadAuthInfo('./BarBar.json')
+	sherek.on('connecting', () => {
 		start('2', 'Connecting...')
 	})
-	thoth.on('open', () => {
+	sherek.on('open', () => {
 		success('2', 'Connected')
 	})
-	await thoth.connect({timeoutMs: 30*1000})
-        fs.writeFileSync('./BarBar.json', JSON.stringify(thoth.base64EncodedAuthInfo(), null, '\t'))
+	await sherek.connect({timeoutMs: 30*1000})
+        fs.writeFileSync('./BarBar.json', JSON.stringify(sherek.base64EncodedAuthInfo(), null, '\t'))
 
-	thoth.on('group-participants-update', async (anu) => {
+	sherek.on('group-participants-update', async (anu) => {
 		if (!welkom.includes(anu.jid)) return
 		try {
-			const mdata = await thoth.groupMetadata(anu.jid)
+			const mdata = await sherek.groupMetadata(anu.jid)
 			console.log(anu)
 			if (anu.action == 'add') {
 				num = anu.participants[0]
 				try {
-					ppimg = await thoth.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
+					ppimg = await sherek.getProfilePicture(`${anu.participants[0].split('@')[0]}@c.us`)
 				} catch {
 					ppimg = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
 				}
 				teks = `Bem vindo(a) @${num.split('@')[0]}\n *${mdata.subject}*`
 				let buff = await getBuffer(ppimg)
-				thoth.sendMessage(mdata.id, buff, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
+				sherek.sendMessage(mdata.id, buff, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
 			} else if (anu.action == 'remove') {
 				num = anu.participants[0]
 				try {
-					ppimg = await thoth.getProfilePicture(`${num.split('@')[0]}@c.us`)
+					ppimg = await sherek.getProfilePicture(`${num.split('@')[0]}@c.us`)
 				} catch {
 					ppimg = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
 				}
 				teks = `Espero que você volte algum dia @${num.split('@')[0]}`
 				let buff = await getBuffer(ppimg)
-				thoth.sendMessage(mdata.id, buff, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
+				sherek.sendMessage(mdata.id, buff, MessageType.image, {caption: teks, contextInfo: {"mentionedJid": [num]}})
 			}
 		} catch (e) {
 			console.log('Error : %s', color(e, 'red'))
 		}
 	})
 	
-	thoth.on('CB:Blocklist', json => {
+	sherek.on('CB:Blocklist', json => {
             if (blocked.length > 2) return
 	    for (let i of json[1].blocklist) {
 	    	blocked.push(i.replace('c.us','s.whatsapp.net'))
 	    }
 	})
 
-	thoth.on('chat-update', async (mek) => {
+	sherek.on('chat-update', async (mek) => {
 		try {
             if (!mek.hasNewMessage) return
             mek = mek.messages.all()[0]
@@ -132,11 +132,11 @@ async function starts() {
 				}
 			}
 
-			const botNumber = thoth.user.jid
+			const botNumber = sherek.user.jid
 			const ownerNumber = ["557499260572@s.whatsapp.net"]
 			const isGroup = from.endsWith('@g.us')
 			const sender = isGroup ? mek.participant : mek.key.remoteJid
-			const groupMetadata = isGroup ? await thoth.groupMetadata(from) : ''
+			const groupMetadata = isGroup ? await sherek.groupMetadata(from) : ''
 			const groupName = isGroup ? groupMetadata.subject : ''
 			const groupId = isGroup ? groupMetadata.jid : ''
 			const groupMembers = isGroup ? groupMetadata.participants : ''
@@ -147,18 +147,18 @@ async function starts() {
 			const isBanned = ban.includes(sender)
 			const isSimi = isGroup ? samih.includes(from) : false
 			const isOwner = ownerNumber.includes(sender)
-			pushname = thoth.contacts[sender] != undefined ? thoth.contacts[sender].vname || thoth.contacts[sender].notify : undefined
+			pushname = sherek.contacts[sender] != undefined ? sherek.contacts[sender].vname || sherek.contacts[sender].notify : undefined
 			const isUrl = (url) => {
 			    return url.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/, 'gi'))
 			}
 			const reply = (teks) => {
-				thoth.sendMessage(from, teks, text, {quoted:mek})
+				sherek.sendMessage(from, teks, text, {quoted:mek})
 			}
 			const sendMess = (hehe, teks) => {
-				thoth.sendMessage(hehe, teks, text)
+				sherek.sendMessage(hehe, teks, text)
 			}
 			const mentions = (teks, memberr, id) => {
-				(id == null || id == undefined || id == false) ? thoth.sendMessage(from, teks.trim(), extendedText, {contextInfo: {"mentionedJid": memberr}}) : thoth.sendMessage(from, teks.trim(), extendedText, {quoted: mek, contextInfo: {"mentionedJid": memberr}})
+				(id == null || id == undefined || id == false) ? sherek.sendMessage(from, teks.trim(), extendedText, {contextInfo: {"mentionedJid": memberr}}) : sherek.sendMessage(from, teks.trim(), extendedText, {quoted: mek, contextInfo: {"mentionedJid": memberr}})
 			}
 			colors = ['red','white','black','blue','yellow','green']
 			const isMedia = (type === 'imageMessage' || type === 'videoMessage')
@@ -169,7 +169,7 @@ async function starts() {
 			if (!isGroup && !isCmd) console.log('\x1b[1;31m~\x1b[1;37m>', '[\x1b[1;31mRECV\x1b[1;37m]', time, color('Message'), 'from', color(sender.split('@')[0]), 'args :', color(args.length))
 			if (isCmd && isGroup) console.log('\x1b[1;31m~\x1b[1;37m>', '[\x1b[1;32mEXEC\x1b[1;37m]', time, color(command), 'from', color(sender.split('@')[0]), 'in', color(groupName), 'args :', color(args.length))
 			if (!isCmd && isGroup) console.log('\x1b[1;31m~\x1b[1;37m>', '[\x1b[1;31mRECV\x1b[1;37m]', time, color('Message'), 'from', color(sender.split('@')[0]), 'in', color(groupName), 'args :', color(args.length))
-			let authorname = thoth.contacts[from] != undefined ? thoth.contacts[from].vname || thoth.contacts[from].notify : undefined	
+			let authorname = sherek.contacts[from] != undefined ? sherek.contacts[from].vname || sherek.contacts[from].notify : undefined	
 			if (authorname != undefined) { } else { authorname = groupName }	
 			
 			function addMetadata(packname, author) {	
@@ -215,23 +215,23 @@ async function starts() {
 		                 case 'lista':
 					case 'menu':
 				    menuimg = fs.readFileSync('./assets/menuimg.jpg')
-					thoth.sendMessage(from, menuimg, image, {quoted: mek, caption: help(prefix), text})
+					sherek.sendMessage(from, menuimg, image, {quoted: mek, caption: help(prefix), text})
                     lima = fs.readFileSync('./assets/menuv.mp3');
-                    thoth.sendMessage(from, lima, MessageType.audio, {quoted: mek, mimetype: 'audio/mp4', ptt:true})
+                    sherek.sendMessage(from, lima, MessageType.audio, {quoted: mek, mimetype: 'audio/mp4', ptt:true})
 					break
 				case 'lista':
 					case 'help':
 				    menuimg = fs.readFileSync('./assets/help.jpg')
-					thoth.sendMessage(from, menuimg, image, {quoted: mek, caption: help(prefix), text})
+					sherek.sendMessage(from, menuimg, image, {quoted: mek, caption: help(prefix), text})
                     lima = fs.readFileSync('./assets/menuv.mp3');
-                    thoth.sendMessage(from, lima, MessageType.audio, {quoted: mek, mimetype: 'audio/mp4', ptt:true})
+                    sherek.sendMessage(from, lima, MessageType.audio, {quoted: mek, mimetype: 'audio/mp4', ptt:true})
 					break
 				case 's':
 				case 'fga':
 				case 'sticker':
 					if ((isMedia && !mek.message.videoMessage || isQuotedImage) && args.length == 0) {
 						const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
-						const media = await thoth.downloadAndSaveMediaMessage(encmedia)
+						const media = await sherek.downloadAndSaveMediaMessage(encmedia)
 						ran = getRandom('.webp')
 						await ffmpeg(`./${media}`)
 							.input(media)
@@ -247,11 +247,11 @@ async function starts() {
 								console.log('Finish')
 								exec(`webpmux -set exif ${addMetadata('557499260572', authorname)} ${ran} -o ${ran}`, async (error) => {
 									if (error) return reply(mess.error.stick)
-									thoth.sendMessage(from, fs.readFileSync(ran), sticker, {quoted: mek})
+									sherek.sendMessage(from, fs.readFileSync(ran), sticker, {quoted: mek})
 									fs.unlinkSync(media)	
 									fs.unlinkSync(ran)	
 								})
-								/*thoth.sendMessage(from, fs.readFileSync(ran), sticker, {quoted: mek})
+								/*sherek.sendMessage(from, fs.readFileSync(ran), sticker, {quoted: mek})
 								fs.unlinkSync(media)
 								fs.unlinkSync(ran)*/
 							})
@@ -260,7 +260,7 @@ async function starts() {
 							.save(ran)
 					} else if ((isMedia && mek.message.videoMessage.seconds < 11 || isQuotedVideo && mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds < 11) && args.length == 0) {
 						const encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
-						const media = await thoth.downloadAndSaveMediaMessage(encmedia)
+						const media = await sherek.downloadAndSaveMediaMessage(encmedia)
 						ran = getRandom('.webp')
 						reply(mess.wait)
 						await ffmpeg(`./${media}`)
@@ -278,11 +278,11 @@ async function starts() {
 								console.log('Finish')
 								exec(`webpmux -set exif ${addMetadata('557499260572', authorname)} ${ran} -o ${ran}`, async (error) => {
 									if (error) return reply(mess.error.stick)
-									thoth.sendMessage(from, fs.readFileSync(ran), sticker, {quoted: mek})
+									sherek.sendMessage(from, fs.readFileSync(ran), sticker, {quoted: mek})
 									fs.unlinkSync(media)
 									fs.unlinkSync(ran)
 								})
-								/*thoth.sendMessage(from, fs.readFileSync(ran), sticker, {quoted: mek})
+								/*sherek.sendMessage(from, fs.readFileSync(ran), sticker, {quoted: mek})
 								fs.unlinkSync(media)
 								fs.unlinkSync(ran)*/
 							})
@@ -291,7 +291,7 @@ async function starts() {
 							.save(ran)
 					} else if ((isMedia || isQuotedImage) && args[0] == 'nobg') {
 						const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
-						const media = await thoth.downloadAndSaveMediaMessage(encmedia)
+						const media = await sherek.downloadAndSaveMediaMessage(encmedia)
 						ranw = getRandom('.webp')
 						ranp = getRandom('.png')
 						reply(mess.wait)
@@ -307,15 +307,15 @@ async function starts() {
 								if (err) return reply(mess.error.stick)
 								exec(`webpmux -set exif ${addMetadata('557499260572', authorname)} ${ranw} -o ${ranw}`, async (error) => {
 									if (error) return reply(mess.error.stick)
-									thoth.sendMessage(from, fs.readFileSync(ranw), sticker, {quoted: mek})
+									sherek.sendMessage(from, fs.readFileSync(ranw), sticker, {quoted: mek})
 									fs.unlinkSync(ranw)
 								})
-								//thoth.sendMessage(from, fs.readFileSync(ranw), sticker, {quoted: mek})
+								//sherek.sendMessage(from, fs.readFileSync(ranw), sticker, {quoted: mek})
 							})
 						})
 					/*} else if ((isMedia || isQuotedImage) && colors.includes(args[0])) {
 						const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
-						const media = await thoth.downloadAndSaveMediaMessage(encmedia)
+						const media = await sherek.downloadAndSaveMediaMessage(encmedia)
 						ran = getRandom('.webp')
 						await ffmpeg(`./${media}`)
 							.on('start', function (cmd) {
@@ -328,7 +328,7 @@ async function starts() {
 							.on('end', function () {
 								console.log('Finish')
 								fs.unlinkSync(media)
-								thoth.sendMessage(from, fs.readFileSync(ran), sticker, {quoted: mek})
+								sherek.sendMessage(from, fs.readFileSync(ran), sticker, {quoted: mek})
 								fs.unlinkSync(ran)
 							})
 							.addOutputOptions([`-vcodec`,`libwebp`,`-vf`,`scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=${args[0]}@0.0, split [a][b]; [a] palettegen=reserve_transparent=off; [b][p] paletteuse`])
@@ -340,11 +340,11 @@ async function starts() {
 					break
 case 'fig':
 case 'f':
-case 'sherek':					
+case 'buceta':					
 case 's':
 if ((isMedia && !mek.message.videoMessage || isQuotedImage) && args.length == 0) {
 const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
-const media = await thoth.downloadAndSaveMediaMessage(encmedia)                                     
+const media = await sherek.downloadAndSaveMediaMessage(encmedia)                                     
 rano = getRandom('.webp')
 await ffmpeg(`./${media}`)
 .input(media)
@@ -361,12 +361,12 @@ reply(ptbr.stick())
 exec(`ffmpeg -i ${media} -vcodec libwebp -filter:v fps=fps=15 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 800:800 ${rano}`, (err) => {
 fs.unlinkSync(media)
 buffer = fs.readFileSync(rano)
-thoth.sendMessage(from, buffer, sticker, {quoted: mek})
+sherek.sendMessage(from, buffer, sticker, {quoted: mek})
 fs.unlinkSync(rano)
 })
 } else if ((isMedia && mek.message.videoMessage.seconds < 11 || isQuotedVideo && mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds < 11) && args.length == 0) {
 const encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
-const media = await thoth.downloadAndSaveMediaMessage(encmedia)
+const media = await sherek.downloadAndSaveMediaMessage(encmedia)
 rano = getRandom('.webp')
 reply(ptbr.waitgif())
 await ffmpeg(`./${media}`)
@@ -385,11 +385,11 @@ reply(`Falha na conversão de ${tipe} para sticker`)
 exec(`ffmpeg -i ${media} -vcodec libwebp -filter:v fps=fps=15 -lossless 1 -loop 0 -preset default -an -vsync 0 -s 200:200 ${rano}`, (err) => {
 fs.unlinkSync(media)
 buffer = fs.readFileSync(rano)
-thoth.sendMessage(from, buffer, sticker, {quoted: mek})
+sherek.sendMessage(from, buffer, sticker, {quoted: mek})
 fs.unlinkSync(rano)
 })
 } else {
-reply(`Você precisa enviar ou marcar uma imagem, vídeo ou gif com no máximo 5 segundos`)
+reply(`Você precisa enviar ou marcar uma imagem ou gif com no máximo 5 segundos`)
 }
 break
 case 'banir':
@@ -404,10 +404,10 @@ for (let _ of mentioned) {
 teks += `@${_.split('@')[0]}\n`
 }
 mentions(teks, mentioned, true)
-thoth.groupRemove(from, mentioned)
+sherek.groupRemove(from, mentioned)
 } else {
 mentions(`Tchau @${mentioned[0].split('@')[0]}`, mentioned, true)
-thoth.groupRemove(from, mentioned)
+sherek.groupRemove(from, mentioned)
 }
 break
 case 'play':   
@@ -418,8 +418,8 @@ if (anu.error) return reply(anu.error)
 infomp3 = `*Caso não seja a musica que deseja, tente novamente*\n\n*Musica encontrada!!!*\nTitulo : ${anu.result.title}\nFonte : ${anu.result.source}\nTamanho : ${anu.result.size}\n\n*ESPERE ENVIANDO POR FAVOR, AGUARDE*\n\n *AmandaBot*`
 buffer = await getBuffer(anu.result.thumbnail)
 lagu = await getBuffer(anu.result.url_audio)
-thoth.sendMessage(from, buffer, image, {quoted: mek, caption: infomp3})
-thoth.sendMessage(from, lagu, audio, {mimetype: 'audio/mp4', filename: `${anu.title}.mp3`, quoted: mek})
+sherek.sendMessage(from, buffer, image, {quoted: mek, caption: infomp3})
+sherek.sendMessage(from, lagu, audio, {mimetype: 'audio/mp4', filename: `${anu.title}.mp3`, quoted: mek})
 break		
 case 'setprefix':
 if (args.length < 1) return
@@ -429,35 +429,6 @@ setting.prefix = prefix
 fs.writeFileSync('./src/settings.json', JSON.stringify(setting, null, '\t'))
 reply(`Prefixo mudado para : ${prefix}`)
 break
-case 'onlyadms':
-			if (!isGroupMsg) return await kill.reply(from, mess.sogrupo(), id)
-            if (!isGroupAdmins) return await kill.reply(from, mess.soademiro(), id)
-            if (!isBotGroupAdmins) return await kill.reply(from, mess.botademira(), id)
-			if (args.length !== 1) return await kill.reply(from, mess.onoff(), id)
-            if (args[0] == 'on') {
-				await kill.setGroupToAdminsOnly(groupId, true).then(async () => { await kill.sendText(from, mess.admson()) })
-			} else if (args[0] == 'off') {
-				await kill.setGroupToAdminsOnly(groupId, false).then(async () => { await kill.sendText(from, mess.admsoff()) })
-			} else return await kill.reply(from, mess.kldica1(), id)
-			break
-case 'antilink':
-			if (isGroupMsg && isGroupAdmins || isGroupMsg && isOwner) {
-				if (args.length !== 1) return await kill.reply(from, mess.onoff(), id)
-				if (args[0] == 'on') {
-					if (atlinks.includes(groupId)) return await kill.reply(from, mess.jaenabled(), id)
-					atlinks.push(groupId)
-					await fs.writeFileSync('./lib/config/Grupos/antilinks.json', JSON.stringify(atlinks))
-					await kill.reply(from, mess.enabled(), id)
-				} else if (args[0] == 'off') {
-					if (!atlinks.includes(groupId)) return await kill.reply(from, mess.jadisabled(), id)
-					atlinks.splice(groupId, 1)
-					await fs.writeFileSync('./lib/config/Grupos/antilinks.json', JSON.stringify(atlinks))
-					await kill.reply(from, mess.disabled(), id)
-				} else return await kill.reply(from, mess.kldica1(), id)
-			} else if (isGroupMsg) {
-				await kill.reply(from, mess.soademiro(), id)
-			} else return await kill.reply(from, mess.sogrupo(), id)
-            break
 case 'membros':
 if (!isGroup) return reply(mess.only.group)
 if (!isGroupAdmins) return reply(mess.only.admin)
@@ -470,15 +441,15 @@ members_id.push(mem.jid)
 }
 mentions(teks, members_id, true)
 break		
-case 'bc':
-if (!isOwner) return reply('Você não é o meu dono')
-if (args.length < 1) return reply('.......')
-anu = await thoth.chats.all()
+case 'tm':
+if (!isOwner) return reply('Somente o Sherek pode usar este comando!')
+if (args.length < 1) return reply('na frente do comando escreva algo')
+anu = await sherek.chats.all()
 if (isMedia && !mek.message.videoMessage || isQuotedImage) {
 const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo : mek
-buff = await thoth.downloadMediaMessage(encmedia)
+buff = await sherek.downloadMediaMessage(encmedia)
 for (let _ of anu) {
-thoth.sendMessage(_.jid, buff, image, {caption: `[Sherek falando]\n\n${body.slice(4)}`})
+sherek.sendMessage(_.jid, buff, image, {caption: `[Sherek falando]\n\n${body.slice(4)}`})
 }
 reply('Feito')
 } else {
@@ -489,11 +460,11 @@ reply('Feito')
 }
 break
 case 'notif':
-thoth.updatePresence(from, Presence.composing)
+sherek.updatePresence(from, Presence.composing)
 if (!isGroup) return reply(mess.only.group)
 if (!isGroupAdmins) return reply(mess.only.admin)
 teks = body.slice(6)
-group = await thoth.groupMetadata(from);
+group = await sherek.groupMetadata(from);
 member = group['participants']
 jids = [];
 member.map(async adm => {
@@ -504,7 +475,7 @@ text: teks,
 contextInfo: { mentionedJid: jids },
 quoted: mek
 }
-await thoth.sendMessage(from, options, text)
+await sherek.sendMessage(from, options, text)
 case 'promover':
 if (!isGroup) return reply(mess.only.group)
 if (!isGroupAdmins) return reply(mess.only.admin)
@@ -517,10 +488,10 @@ for (let _ of mentioned) {
 teks += `@${_.split('@')[0]}\n`
 }
 mentions(from, mentioned, true)
-thoth.groupRemove(from, mentioned)
+sherek.groupRemove(from, mentioned)
 } else {
 mentions(`@${mentioned[0].split('@')[0]} virou adm!`, mentioned, true)
-thoth.groupMakeAdmin(from, mentioned)
+sherek.groupMakeAdmin(from, mentioned)
 }
 break
 case 'gostosas':
@@ -546,7 +517,7 @@ case 'gostosas':
                         mentions(teks, member, true)
 break 
 case 'fechar':
-thoth.updatePresence(from, Presence.composing)
+sherek.updatePresence(from, Presence.composing)
 if (!isGroup) return reply(mess.only.group)
 if (!isGroupAdmins) return reply(mess.only.admin)
 if (!isBotGroupAdmins) return reply(mess.only.Badmin)
@@ -555,11 +526,11 @@ const close = {
 text: `@${nomor.split("@s.whatsapp.net")[0]}\nfechou o grupo`,
 contextInfo: { mentionedJid: [nomor] }
 }
-thoth.groupSettingChange(from, GroupSettingChange.messageSend, true);
+sherek.groupSettingChange(from, GroupSettingChange.messageSend, true);
 reply(close)
 break
 case 'abrir':
-thoth.updatePresence(from, Presence.composing)
+sherek.updatePresence(from, Presence.composing)
 if (!isGroup) return reply(mess.only.group)
 if (!isGroupAdmins) return reply(mess.only.admin)
 if (!isBotGroupAdmins) return reply(mess.only.Badmin)
@@ -567,8 +538,8 @@ open = {
 text: `@${sender.split("@")[0]}\nabriu o grupo`,
 contextInfo: { mentionedJid: [sender] }
 }
-thoth.groupSettingChange(from, GroupSettingChange.messageSend, false)
-thoth.sendMessage(from, open, text, { quoted: mek })
+sherek.groupSettingChange(from, GroupSettingChange.messageSend, false)
+sherek.sendMessage(from, open, text, { quoted: mek })
 break
 case 'rebaixar':
 if (!isGroup) return reply(mess.only.group)
@@ -582,17 +553,17 @@ for (let _ of mentioned) {
 teks += `@${_.split('@')[0]}\n`
 }
 mentions(teks, mentioned, true)
-thoth.groupRemove(from, mentioned)
+sherek.groupRemove(from, mentioned)
 } else {
 mentions(`@${mentioned[0].split('@')[0]} membro rebaixado`, mentioned, true)
-thoth.groupDemoteAdmin(from, mentioned)
+sherek.groupDemoteAdmin(from, mentioned)
 }
 break
 case 'link':
 if (!isGroup) return reply(mess.only.group)
 if (!isGroupAdmins) return reply(mess.only.admin)
 if (!isBotGroupAdmins) return reply(mess.only.Badmin)
-linkgc = await thoth.groupInviteCode(from)
+linkgc = await sherek.groupInviteCode(from)
 reply('https://chat.whatsapp.com/'+linkgc)
 break
 
@@ -619,7 +590,7 @@ case 'marcar':
 case 'sair':
 if (!isGroup) return reply(mess.only.group)
 if (isGroupAdmins || isOwner) {
-thoth.groupLeave(from)
+sherek.groupLeave(from)
 } else {
 reply(mess.only.admin)
 }
@@ -629,13 +600,13 @@ if (!isGroup) return reply(mess.only.group)
 if (!isQuotedSticker) return reply(' marque um sticker ')
 reply(mess.wait)
 encmedia = JSON.parse(JSON.stringify(mek).replace('quotedM','m')).message.extendedTextMessage.contextInfo
-media = await thoth.downloadAndSaveMediaMessage(encmedia)
+media = await sherek.downloadAndSaveMediaMessage(encmedia)
 ran = getRandom('.png')
 exec(`ffmpeg -i ${media} ${ran}`, (err) => {
 fs.unlinkSync(media)
 if (err) return reply(' Só sticker sem movimento ')
 buffer = fs.readFileSync(ran)
-thoth.sendMessage(from, buffer, image, {quoted: mek, caption: 'O Sherek quer foto da sua buceta, mande para ele\nwa.me/557499260572'})
+sherek.sendMessage(from, buffer, image, {quoted: mek, caption: 'O Sherek quer foto da sua buceta, mande para ele\nwa.me/557499260572'})
 fs.unlinkSync(ran)
 })
 break
@@ -647,11 +618,11 @@ if (Number(args[0]) === 1) {
 if (isWelkom) return reply('Já ativo')
 welkom.push(from)
 fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
-reply('Ativado com sucesso ✔️')
+reply('Comando ativado')
 } else if (Number(args[0]) === 0) {
 welkom.splice(from, 1)
 fs.writeFileSync('./src/welkom.json', JSON.stringify(welkom))
-reply('Desativado com sucesso ✔️')
+reply('Comando desativado')
 } else {
 reply('1 para ativar, 0 para desativar')
 }
