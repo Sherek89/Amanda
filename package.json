@@ -1,5 +1,5 @@
 {
-  "name": "amanda",
+  "name": "amandabot",
   "version": "1.0.0",
   "description": "No comment",
   "main": "index.js",
@@ -17,7 +17,7 @@
     "whatsapp",
     "bot"
   ],
-  "author": "Thoth",
+  "author": "Sherek",
   "license": "ISC",
   "dependencies": {
     "@adiwajshing/baileys": "^3.4.1",
