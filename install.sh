@@ -1,9 +1,10 @@
-#!/usr/bin/bash
+Para instalar o bot pelo termux, siga a ordem abaixo
 
-apt-get update
-apt-get upgrade
-apt-get install -y nodejs libwebp ffmpeg wget tesseract
-wget -O ~/../usr/share/tessdata/ind.traineddata "https://github.com/tesseract-ocr/tessdata/blob/master/ind.traineddata?raw=true"
-npm install
-
-echo "[*] All dependencies have been installed, please run the command \"npm start\" to immediately start the script"
+pkg install github
+apt upgrade -y
+apt update -y
+pkg install git
+git clone
+cd 
+bash install.sh
+npm start
