@@ -1,8 +1,9 @@
 const help = (prefix) => {
 	return `
-╔══✪〘 INFO 〙✪══
+    
+╔══✪〘 *MENU* 〙✪══
 ║
-╠➥ ${pushname} 
+╠➥ ${pushname} Olá, bem vindo(a) ao meu menu
 ╠
 ╠➥ *AMANDA BOT*
 ╠➥ Versão 1.0.0
@@ -15,7 +16,8 @@ const help = (prefix) => {
 ║
 ╠══✪〘 *STICKER* 〙✪══
 ║
-╠➥ ${prefix}img
+╠➥ ${prefix}img 
+╠➥ ${prefix}fig
 ╠➥ ${prefix}s
 ║
 ╠══✪〘 *OUTROS* 〙✪══ 
